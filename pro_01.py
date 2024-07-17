@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.express as px
-import plotly.graph_objects as go
 
 # Configurar el título de la aplicación
 st.title('Manipulación y Análisis de Datos')
@@ -26,8 +24,6 @@ if uploaded_file is not None:
     st.subheader('Matriz de Correlación')
     corr_matrix = df.corr()
     st.write(corr_matrix)
-    fig = px.imshow(corr_matrix, text_auto=True, aspect="auto", title='Matriz de Correlación')
-    st.plotly_chart(fig)
     
     # Selección de columnas
     st.sidebar.subheader('Selección de Columnas')
@@ -67,23 +63,20 @@ if uploaded_file is not None:
         hist_column = st.sidebar.selectbox('Selecciona la columna para Histograma', selected_columns)
         if hist_column:
             st.subheader(f'Histograma de {hist_column}')
-            fig = px.histogram(df_selected, x=hist_column, nbins=30, title=f'Histograma de {hist_column}')
-            st.plotly_chart(fig)
+            st.bar_chart(df_selected[hist_column].value_counts())
         
         # Diagrama de Dispersión
         scatter_x = st.sidebar.selectbox('Selecciona columna X para Diagrama de Dispersión', selected_columns)
         scatter_y = st.sidebar.selectbox('Selecciona columna Y para Diagrama de Dispersión', selected_columns)
         if scatter_x and scatter_y:
             st.subheader(f'Diagrama de Dispersión de {scatter_x} vs {scatter_y}')
-            fig = px.scatter(df_selected, x=scatter_x, y=scatter_y, title=f'Diagrama de Dispersión de {scatter_x} vs {scatter_y}')
-            st.plotly_chart(fig)
+            st.line_chart(df_selected[[scatter_x, scatter_y]])
         
         # Diagrama de Caja
         box_column = st.sidebar.selectbox('Selecciona la columna para Diagrama de Caja', selected_columns)
         if box_column:
             st.subheader(f'Diagrama de Caja de {box_column}')
-            fig = px.box(df_selected, y=box_column, title=f'Diagrama de Caja de {box_column}')
-            st.plotly_chart(fig)
+            st.write(df_selected[box_column].describe())
         
         # Operaciones Matemáticas
         st.sidebar.subheader('Operaciones Matemáticas')
